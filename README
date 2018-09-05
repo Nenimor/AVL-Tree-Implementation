@@ -1,0 +1,111 @@
+ronenmor
+
+yoavhalevi noamkap or.costa
+
+=====================================================
+===================Description=======================
+=====================================================
+
+This program defines an AVL tree- a self balancing binary search tree which maintains the AVL property - for
+each node, the difference between the heights of both of its sub-trees is at most 1.1 This is done by
+re-balancing the tree after each insertion and deletion operation. For further information- visit:
+https://en.wikipedia.org/wiki/AVL_tree
+
+**The height of a tree is defined as the length of the longest downward path from the root to any of the
+leaves**
+
+
+The program contains the following files:
+# Node- a class which defines a single node of a binary search tree. Each node has a value (in our
+case-integer), depth (height) in the tree, and a right child & a left child- both of Node type.
+
+# BinarySearchTree- a class which defines a simple binary search tree with it's basic operations- insertion,
+deletion, contains check, get size, and a method which creates an iterator in ascending value order of the
+tree.
+
+# AvlTree- a class which extends the class BinarySearchTree, and defines an AVL Tree. This class inherits
+the basic methods of BinarySearchTree- and extends them in order to balance the tree and maintain the AVL
+property.
+
+
+=====================================================
+======================Design=========================
+=====================================================
+
+I decided to build a basic class 'BinarySearchTree' since there are different kinds of binary search trees
+which has different properties, but all support the same basic operations- add, delete, contains & size.
+At first, as described in the UML i planned to make 'BinarySearchTree' as an interface, but then I thought
+that it's relevant to be able to create such an instance, since regular basic binary search trees are being
+helpfully used in programming.
+The class 'AvlTree' extends it, since it has some extra functionality - self re-balancing of the tree after
+any insertion/deletion.
+Any other type of a binary search tree can easily extend 'BinarySearchTree', inherit it's basic operations,
+and add some extra operations of itself.
+
+*Any other self-balancing binary search tree can extend 'AvlTree', inherit it's leftRotation/rightRotation
+methods- as they are common to any tree of this kind, and override the method 'balanceTree' according to
+it's properties.
+
+=====================================================
+==============Implementation Issues==================
+=====================================================
+
+implementation of the method 'add'-
+I created a recursive assistance method called 'addHelper' which gets the value desired to be added, and a
+Node 'currentNode'. The first recursive call is done with the root of the tree, with the general workflow-
+if the currentNode's value equals to value to add- return false (no duplications allowed in the tree).
+if the current node's value is smaller than the value to add - check if it has right son, if not- add the
+new value to it's right, else call the method with it's right son.
+if the current node's value is greater than the value to add, check if it has left son, if not- add the
+new value to it's left, else call the method with it's right son. A depth update is being done while there
+is any change of links in the tree.
+
+implementation of the method 'delete'-
+I created a recursive assistance method called 'deleteHelper' which gets the value desired to delete, and a
+ Node 'currentNode'. The first recursive call is done with the root of the tree, with the general workflow-
+if the current node's value is smaller than the value to delete, call the method with it's right son.
+if the current node's value is greater than the value to delete, call the method with it's left son.
+if current node is null- return false as the desired value to delete wasn't found in the tree.
+if current node's value equals to the value to delete- there are 2 cases:
+1)the node needs to be removed has only one child (the other is null) - link it's parent to it's single son.
+2)the node needs to be removed has both children- call 'twoSonsDeletion'- which finds the successive node,
+keeps it's value, removes it from the tree by calling 'delete', than changed the value of the node to
+remove to the successive value. A depth update is being done while there is any change of links in the tree.
+
+
+
+***I decided to split the insertion/deletion operations and the re-balancing operation, in order to make
+the basic add/delete functionality to a simple binary search tree- which seemed like a better design. This
+decision 'costs' additional (log n) operations, for insertion/deletion of the AVL tree (further explanation
+ in 'Answers to Questions', 6.2, Q-1), but still has an asymptotic running time of O(log n). I would like
+ to know if this decision of better design (in my opinion) over better running time is right- generally,
+ and in particular in this case***
+
+
+=====================================================
+================Answers to Questions=================
+=====================================================
+
+6.1 Analyzing the AVL tree-
+
+An insertion of the next series of numbers will result in an AVL tree of height 4:
+
+10,5,20,30,15,7,2,1,3,8,16,40
+
+6.2 The complexity of constructing an AVL tree-
+
+1. As explained in 'Design'- I decided to split the insertion and re-balancing operations.
+insertion "costs" O(log n), as it's done similarly to a binary search.
+re-balancing also "costs" O(log n), since it goes down the tree until it reaches the new value which has
+been added, then going back and calculating the balance factor of each node (O(1)), and then making
+rotations if necessary -(O(1)). In total, and insertion & re-balancing costs 2log n, which stays O(log n).
+For a given array of n elements, the asymptotic running time will be O(n*log n) - n elements to add, log n
+for each addition.
+
+2. This constructor creates an iterator of the given tree - the iterator creation transforms the tree into
+an array by asymptotic running time of O(n), then the constructor creates a new tree from the array, which
+is similar to the situation handled in the last question- costs O(n*log n).
+In total- (n + n*log n), still stays O(n*log n).
+
+
+
